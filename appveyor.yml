@@ -1,0 +1,41 @@
+environment:
+  # APPVEYOR_RDP_PASSWORD: MGBhv3GGVL]w
+  MINGW_DIR: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
+  TWINE_PASSWORD:
+    secure: f1JxIv/JK9PsYkge4VomIfQlO1sUPvk7JC/VSUkRZ3k=
+
+build_script:
+  - pip install cibuildwheel==0.9.4
+  - pip install twine
+
+  - python setup_project.py
+
+  - |
+    set /p pkgdir=<meta_pkgdir.txt
+    set /p gh_repo_name=<meta_pkgname.txt
+    set /p gh_repo_owner=<meta_owner.txt
+    set /p tag=<meta_tag.txt
+    set /p TWINE_USERNAME=<meta_twine_user.txt
+    set /p TWINE_REPOSITORY_URL=<meta_twine_repo_url.txt
+
+  - |
+    set /p CIBW_SKIP=<meta_CIBW_SKIP.txt
+    set CIBW_ENVIRONMENT=MINGW_DIR=%MINGW_DIR%
+    set CIBW_BEFORE_BUILD_WINDOWS=pre_build_win.bat
+    set CIBW_TEST_COMMAND=python -m viscid check
+
+  - "%CIBW_BEFORE_BUILD_WINDOWS%"
+
+  - cd %pkgdir%
+  - cibuildwheel
+
+  - dir wheelhouse
+
+  - twine upload wheelhouse/*.whl
+
+artifacts:
+  - path: "%pkgdir%\\wheelhouse\\*.whl"
+    name: Wheels
+
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

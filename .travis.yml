@@ -1,0 +1,67 @@
+language: python
+
+env:
+  global:
+    - secure: "d/+7FqkcOcdixF4SevbJJoxRatDlMv6GdD7/JWmk5vjEkmULo2IOyLaXkhNPGAkQpcGlvDovhEC9veB/X1b0ZjZptnhkuhXTfK5wQVTlsNsltHpXTUFaCYudQWhsz2jfSbS6uWIlbyaslig1XQtOXcZQrBKJ1/mgjG4IdycQfU7CfL0vn7n4ZF+V9Ni5KQjMSLAokem/ag4+VyG6nSrxbkFajsXGB5nrouRrGZsn1RQJGCW0m8kwDMgaiiZKU4ff3Y7/Ayy2d0SHcte8fO14t3ZeEoKqn1XnTYL4VAUdHLqICRScHqX5vxDfs20EsTCAlLsPjApF53Q5lk4YEEkJKRE+PkuONOwTlWMASvWmcCIXUqumN+2GjPx5hJ6k234SYT8jorP3ZGN1OdbSjFBFpE9U7qElGqyOUYo7+XbHdCTknrXUKROA5CUKWdLJ4/2FmQIuVgTK4XhHUdquksRKyXqDVxkAvyDN4QK9Hi0V/gGJz7N9tZ0A9YLxD93G8IqcCuCWaKCAok1jRB0LN0OvlyJXgZThhINagXOj5otglKEoIBoTHRM+UO1hZYYb+cXBlpcpeY+x8MEy66C0E/MHLwcIpD0E2d2R93ZHoBVV8T2jt4cD7MUevj2xKbrXUxaYPRTAjT0y5yy54U3eA9PNDWNZIAakVR4y7qbomu2sBe4="
+
+matrix:
+  include:
+  - sudo: required
+    services:
+    - docker
+    env: PIP=pip
+  - os: osx
+    language: generic
+    env: PIP=pip2
+
+script:
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    export PIP_INSTALL_OPTS="--user"
+    export PATH="${PATH}:$(python -m site --user-base)/bin"
+  else
+    export PIP_INSTALL_OPTS=""
+    export PATH="${PATH}:$(python -m site --user-base)/bin"
+  fi
+
+- echo "${PATH}"
+
+- $PIP install ${PIP_INSTALL_OPTS} cibuildwheel==0.9.4
+- $PIP install ${PIP_INSTALL_OPTS} twine
+
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    brew cask uninstall --force oclint
+    brew install gcc
+  fi
+
+- python setup_project.py
+
+- |
+  export pkgdir="$(cat meta_pkgdir.txt)"
+  export gh_repo_name="$(cat meta_pkgname.txt)"
+  export gh_repo_owner="$(cat meta_owner.txt)"
+  export tag="$(cat meta_tag.txt)"
+  export TWINE_USERNAME="$(cat meta_twine_user.txt)"
+  export TWINE_REPOSITORY_URL="$(cat meta_twine_repo_url.txt)"
+
+- |
+  export CIBW_SKIP="$(cat meta_CIBW_SKIP.txt)"
+  export CIBW_BEFORE_BUILD_LINUX="source pre_build_linux.sh"
+  export CIBW_BEFORE_BUILD_MACOS="source pre_build_osx.sh"
+  export CIBW_TEST_COMMAND="python -m viscid check"
+
+- cd ${pkgdir}
+- cibuildwheel
+
+- ls -la ./wheelhouse
+
+- twine upload wheelhouse/*.whl
+
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    rm -rf dist/*
+    pip install numpy==$(python numpy_version.py)
+    python setup.py sdist
+    twine upload dist/*.tar.gz
+  fi
