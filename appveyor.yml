@@ -2,7 +2,7 @@ environment:
   # APPVEYOR_RDP_PASSWORD: MGBhv3GGVL]w
   MINGW_DIR: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
   TWINE_PASSWORD:
-    secure: f1JxIv/JK9PsYkge4VomIfQlO1sUPvk7JC/VSUkRZ3k=
+    secure: JUUr+y1xmjytIQuh3xWhXTDkoJsqLpdhsTrm/ZZO4KE=
 
 build_script:
   - pip install cibuildwheel==0.9.4
