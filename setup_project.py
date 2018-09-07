@@ -15,7 +15,7 @@ except ImportError:
 
 CIBW_SKIP = "*-win32 *-manylinux1_i686 cp33-* cp34-*"
 
-test_pypi = False
+test_pypi = True
 
 # NOTE: the TWINE_PASSWORD environment variable should be set using a
 #       a secure variable in your CI service (travis, appveyor, etc.)
@@ -27,9 +27,9 @@ else:
 
 gh_owner = "viscid-hub"
 gh_repo_name = "Viscid"
-tag = "1.0.0.dev2"
-sha256 = "a0602e38c35e80d443782b9a80ce54b22fa503c49543f7d5cfcb3f6d0b3d4bf1"
-sha384 = "14b1fc50efa13b6986cbf0deff36092899f73989ee5f79532216a1d61f77dc5a7fcc7fcebde0c68aa9dc543542494c20"
+tag = "0.99.9"
+sha256 = "e5c11ad2db28aa5e6e67397d6dfd480f7ce7611f33d890246f7568f04a91643c"
+sha384 = "ad4dca69bcb7d1ae798586c6b96e74223ff8427b32b339993ca1f0e7fe0b41b16e778483af113def4b138e5c77e16c6e"
 
 dl_ext = "zip"
 
