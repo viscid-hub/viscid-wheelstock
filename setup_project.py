@@ -27,8 +27,8 @@ else:
 
 gh_owner = "viscid-hub"
 gh_repo_name = "Viscid"
-tag = "1.0.0.dev3"
-sha256 = "c36ab0df00bdf9b35f192dde052994363d3142ea9cde0544a05d3f32b0b16130"
+tag = "1.0.0-dev.4"
+sha256 = "25045f2e5e8e99f0c25ba2275ba18f2e078c6e32fb1a7017d2983fdedfb78c24"
 
 dl_ext = "zip"
 
