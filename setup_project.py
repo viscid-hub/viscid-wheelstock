@@ -29,7 +29,6 @@ gh_owner = "viscid-hub"
 gh_repo_name = "Viscid"
 tag = "0.99.9"
 sha256 = "e5c11ad2db28aa5e6e67397d6dfd480f7ce7611f33d890246f7568f04a91643c"
-sha384 = "ad4dca69bcb7d1ae798586c6b96e74223ff8427b32b339993ca1f0e7fe0b41b16e778483af113def4b138e5c77e16c6e"
 
 dl_ext = "zip"
 
@@ -48,7 +47,7 @@ with open(zip_filename, 'wb') as fout:
     request = urlopen(gh_dl_url)
     zip_data = request.read()
     zip_sha256_digest = hashlib.sha256(zip_data).hexdigest()
-    zip_sha384_digest = hashlib.sha384(zip_data).hexdigest()
+    # zip_sha384_digest = hashlib.sha384(zip_data).hexdigest()
     fout.write(zip_data)
     zip_data = None
 
@@ -64,11 +63,11 @@ if sha256 and zip_sha256_digest != sha256:
           "    template:{0}\n".format(sha256), file=sys.stderr)
     hash_mismatch += 'sha256'
 
-print("sha384:", zip_sha384_digest)
-if sha384 and zip_sha384_digest != sha384:
-    print("Hash mismatch (sha384):\n"
-          "    template:{0}\n".format(sha384), file=sys.stderr)
-    hash_mismatch += 'sha384'
+# print("sha384:", zip_sha384_digest)
+# if sha384 and zip_sha384_digest != sha384:
+#     print("Hash mismatch (sha384):\n"
+#           "    template:{0}\n".format(sha384), file=sys.stderr)
+#     hash_mismatch += 'sha384'
 
 if hash_mismatch:
     raise RuntimeError("hash mismatch ({0})".format(hash_mismatch))
