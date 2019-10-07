@@ -15,7 +15,7 @@ except ImportError:
 
 CIBW_SKIP = "*-win32 *-manylinux1_i686 cp33-* cp34-*"
 
-test_pypi = True
+test_pypi = False
 
 # NOTE: the TWINE_PASSWORD environment variable should be set using a
 #       a secure variable in your CI service (travis, appveyor, etc.)
